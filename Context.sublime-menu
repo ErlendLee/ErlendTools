@@ -1,0 +1,44 @@
+[
+    {"id": "erlend_tools_class", "caption": "-"},
+    {
+        "id": "erlend_tools",
+        "caption": "ErlendTools",
+        "children": [
+            {
+                "id": "trans_to_english",
+                "caption": "翻译为英文",
+                "command": "trans_to_english"
+            },
+            {
+                "id": "trans_to_chinese",
+                "caption": "翻译为中文",
+                "command": "trans_to_chinese"
+            },
+            {
+                "id": "format_select_text",
+                "caption": "格式化文本",
+                "command": "format_select_text"
+            },
+            {
+                "id": "get_sum",
+                "caption": "求和",
+                "command": "get_sum"
+            },
+            {
+                "id": "clear_none",
+                "caption": "删除空行",
+                "command": "clear_none"
+            },
+            {
+                "id": "add_current_date",
+                "caption": "当前日期",
+                "command": "add_current_date"
+            },
+            {
+                "id": "shift_vim_model",
+                "caption": "切换VIM",
+                "command": "shift_vim_model"
+            },
+        ]
+    }
+]
