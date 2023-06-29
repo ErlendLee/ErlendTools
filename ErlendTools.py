@@ -142,3 +142,23 @@ class ShiftVimModel(sublime_plugin.ApplicationCommand):
         sublime.status_message(msg)
 
         sublime.save_settings("Preferences.sublime-settings")
+
+
+class ShiftCamelOrUnderline(sublime_plugin.TextCommand):
+    def run(self, edit):
+        selection = self.view.sel()
+        region = sublime.Region(selection[0].a, selection[0].b)
+        old_text = self.view.substr(selection[0])
+        if '_' in old_text:
+            words = old_text.split('_')
+            result = ''.join([word.capitalize() for word in words])
+        else:
+            result = ''
+            for char in old_text:
+                if char.isupper() and not result:
+                    result += char.lower()
+                elif char.isupper() and result:
+                    result += '_' + char.lower()
+                else:
+                    result += char
+        self.view.replace(edit, region, result)
