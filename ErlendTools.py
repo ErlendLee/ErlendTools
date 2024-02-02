@@ -149,16 +149,22 @@ class ShiftCamelOrUnderline(sublime_plugin.TextCommand):
         selection = self.view.sel()
         region = sublime.Region(selection[0].a, selection[0].b)
         old_text = self.view.substr(selection[0])
+        # 下划线转驼峰
         if '_' in old_text:
             words = old_text.split('_')
             result = ''.join([word.capitalize() for word in words])
+
+        # 驼峰转下划线
         else:
             result = ''
-            for char in old_text:
-                if char.isupper() and not result:
-                    result += char.lower()
-                elif char.isupper() and result:
-                    result += '_' + char.lower()
-                else:
-                    result += char
+            if old_text[0].islower():
+                result = old_text[0].upper() + old_text[1:]
+            if old_text[0].isupper():
+                for char in old_text:
+                    if char.isupper() and not result:
+                        result += char.lower()
+                    elif char.isupper() and result:
+                        result += '_' + char.lower()
+                    else:
+                        result += char
         self.view.replace(edit, region, result)

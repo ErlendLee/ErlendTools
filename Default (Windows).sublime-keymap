@@ -7,4 +7,5 @@
 	{ "keys": ["ctrl+j", "ctrl+e"], "command": "trans_to_english" },
 	{ "keys": ["ctrl+j", "ctrl+z"], "command": "trans_to_chinese" },
 	{ "keys": ["ctrl+j", "ctrl+u"], "command": "shift_camel_or_underline" },
+	{ "keys": ["ctrl+j", "ctrl+b"], "command": "terminus_open", "args" : {"cwd": "${file_path:${folder}}", "title": "🟢Bash Terminal"}},
 ]

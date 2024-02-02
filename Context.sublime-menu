@@ -5,6 +5,26 @@
         "caption": "ErlendTools",
         "children": [
             {
+                "id": "terminu_here",
+                "caption": "Bash Here",
+                "command": "terminus_open",
+                "args" : {
+                    "cwd": "${file_path:${folder}}",
+                    "title": "🟢Bash Terminal",
+                }
+            },
+            {
+                "id": "conda_here",
+                "caption": "Conda Here",
+                "command": "terminus_open",
+                "args" : {
+                    //"cmd": "cmd.exe \"/K\" D:\\software\\anaconda3\\Scripts\\activate.bat D:\\software\\anaconda3",
+                    "cmd": "myconda.bat",
+                    "cwd": "${file_path:${folder}}",
+                    "title": "🔵CMD Conda Terminal",
+                }
+            },
+            {
                 "id": "trans_to_english",
                 "caption": "翻译为英文",
                 "command": "trans_to_english"
@@ -39,6 +59,7 @@
                 "caption": "切换VIM",
                 "command": "shift_vim_model"
             },
+            
         ]
     }
 ]
