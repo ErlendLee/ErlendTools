@@ -1,0 +1,16 @@
+[
+    {
+        "caption": "Gpt: Ask Gpt",
+        "command": "ask_gpt"
+    },
+    {
+        "caption": "Gpt: Show Panel",
+        "command": "ask_gpt",
+        "args" : {"panel_op": "just_show"}
+    },
+    {
+        "caption": "Gpt: Clear Panel",
+        "command": "ask_gpt",
+        "args" : {"panel_op": "clear"}
+    },
+]

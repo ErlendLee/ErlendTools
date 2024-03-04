@@ -4,8 +4,9 @@
 	{ "keys": ["ctrl+j", "ctrl+f"], "command": "format_select_text" },
 	{ "keys": ["ctrl+j", "ctrl+v"], "command": "shift_vim_model" },
 	{ "keys": ["ctrl+j", "ctrl+c"], "command": "clear_none" },
-	{ "keys": ["ctrl+j", "ctrl+e"], "command": "trans_to_english" },
-	{ "keys": ["ctrl+j", "ctrl+z"], "command": "trans_to_chinese" },
+	{ "keys": ["ctrl+j", "ctrl+e"], "command": "translate", "args" : {"to_lang": "en"}},
+	{ "keys": ["ctrl+j", "ctrl+z"], "command": "translate", "args" : {"to_lang": "zh"}},
 	{ "keys": ["ctrl+j", "ctrl+u"], "command": "shift_camel_or_underline" },
 	{ "keys": ["ctrl+j", "ctrl+b"], "command": "terminus_open", "args" : {"cwd": "${file_path:${folder}}", "title": "🟢Bash Terminal"}},
+	{ "keys": ["ctrl+j", "ctrl+g"], "command": "ask_gpt" },
 ]

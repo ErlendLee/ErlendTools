@@ -1,9 +1,19 @@
 [
     {"id": "erlend_tools_class", "caption": "-"},
     {
+        "id": "ask_gpt",
+        "caption": "AskGpt",
+        "command": "ask_gpt"
+    },
+    {
         "id": "erlend_tools",
         "caption": "ErlendTools",
         "children": [
+            {
+                "id": "ask_gpt",
+                "caption": "AskGpt",
+                "command": "ask_gpt"
+            },
             {
                 "id": "terminu_here",
                 "caption": "Bash Here",
@@ -27,12 +37,14 @@
             {
                 "id": "trans_to_english",
                 "caption": "翻译为英文",
-                "command": "trans_to_english"
+                "command": "translate",
+                "args" : {"to_lang": "en"}
             },
             {
                 "id": "trans_to_chinese",
                 "caption": "翻译为中文",
-                "command": "trans_to_chinese"
+                "command": "translate",
+                "args" : {"to_lang": "zh"}
             },
             {
                 "id": "format_select_text",
