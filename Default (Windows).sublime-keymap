@@ -9,4 +9,7 @@
 	{ "keys": ["ctrl+j", "ctrl+u"], "command": "shift_camel_or_underline" },
 	{ "keys": ["ctrl+j", "ctrl+b"], "command": "terminus_open", "args" : {"cwd": "${file_path:${folder}}", "title": "🟢Bash Terminal"}},
 	{ "keys": ["ctrl+j", "ctrl+g"], "command": "ask_gpt" },
+	{ "keys": ["ctrl+j", "ctrl+l"], "command": "monitor" },
+
+	{ "keys": ["ctrl+t", "ctrl+u"], "command": "permute_lines", "args": {"operation": "unique"}},
 ]

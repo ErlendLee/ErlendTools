@@ -13,4 +13,24 @@
         "command": "ask_gpt",
         "args" : {"panel_op": "clear"}
     },
+    {
+        "caption": "Gpt: Shift Module",
+        "command": "ask_gpt",
+        "args" : {"panel_op": "shift_module"}
+    },
+    {
+        "caption": "Stock: Once",
+        "command": "monitor",
+        "args" : {"op": "once"}
+    },
+    {
+        "caption": "Stock: Continue",
+        "command": "monitor",
+        "args" : {"op": "continue"}
+    },
+    {
+        "caption": "Stock: Stop",
+        "command": "monitor",
+        "args" : {"op": "stop"}
+    },
 ]

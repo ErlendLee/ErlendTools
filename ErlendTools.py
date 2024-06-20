@@ -1,5 +1,5 @@
 import re
-# import sys
+import os
 # import json
 import datetime
 import sublime
@@ -54,6 +54,15 @@ class SharedOutputPanelListener(EventListener):
         self.window.run_command(
             "show_panel", {"panel": f"output.{self.OUTPUT_PANEL_NAME}"})
 
+    def save_panel(self, path):
+        content = self.output_panel.substr(
+            sublime.Region(0, self.output_panel.size()))
+        directory = os.path.dirname(path)
+        if not os.path.exists(directory):
+            print("保存路径不存在")
+        with open(path, 'a') as f:
+            f.write(content)
+
 
 def __get_number_of_lines__(view: View) -> int:
     last_line_num = view.rowcol(view.size())[0]
@@ -79,7 +88,10 @@ class Translate(sublime_plugin.TextCommand):
 
         from_lang = 'auto'
         # to_lang en 英文；zh 中文
-        r_str = my_trans(from_lang, to_lang, query)
+        # r_str = my_trans(from_lang, to_lang, query)
+        url = xxx
+        data = xxx
+        r_str = requests.request("POST", url, json=data).json()
 
         new_text = TAG + get_trans_result(r_str)
         self.view.insert(edit, max(selection[0].a, selection[0].b), new_text)
@@ -210,14 +222,19 @@ import requests
 import json
 
 
+DEFAULT_MODULE = 'azure-gpt-4'
+
+
 class AskGpt(sublime_plugin.TextCommand):
     def __init__(self, view):
         super().__init__(view)
         self.window = sublime.active_window()
         self.listener = SharedOutputPanelListener(
             window=self.window, markdown=True)
+        self.out_file = r'D:\00work\GPT_OUT.md'
 
     def run(self, edit, panel_op='ask'):
+        global DEFAULT_MODULE
         if panel_op == 'ask':
             thread = threading.Thread(target=self.request_gpt)
             thread.start()
@@ -225,6 +242,9 @@ class AskGpt(sublime_plugin.TextCommand):
             self.listener.show_panel()
         elif panel_op == 'clear':
             self.listener.clear_output_panel()
+        elif panel_op == 'shift_module':
+            DEFAULT_MODULE = 'glm-4' if DEFAULT_MODULE == 'azure-gpt-4' else 'azure-gpt-4'
+            sublime.status_message(f'>>>当前模型{DEFAULT_MODULE}<<<')
 
     def get_prompt(self):
         selection = self.view.sel()
@@ -235,32 +255,83 @@ class AskGpt(sublime_plugin.TextCommand):
         self.listener.update_output_panel(text)
         self.listener.refresh_output_panel()
 
+    def output_panel_file(self, text, file_instance):
+        self.output_panel(text)
+        file_instance.write(text)
+
     def request_gpt(self):
+        global DEFAULT_MODULE
         self.listener.show_panel()
         self.listener.toggle_overscroll(enabled=False)
 
-        url = "http://gpt.longi.com:8080/api/chat/streamChatWithWeb/V3"
-        payload = json.dumps({
-            "conversationId": "82d80c79-125a-4b1f-b398-ae28b8969480",
-            "prompt": self.get_prompt(),
-            "options": {},
-            "model": "azure-gpt-4",
-            "contentNumber": 20,
-            "systemMessage": "You are ChatGPT, a large language model trained by OpenAI. Follow the user's instructions carefully. Respond using markdown.",
-            "temperature": 0.8,
-            "top_p": 1
-        })
-        headers = {
-            'blueCat_token': '????',
-            'Content-Type': 'application/json'
-        }
+        prompt = self.get_prompt()
 
-        self.output_panel(
-            text="\n\n--------------------------开始请求--------------------------\n\n")
-        with requests.request("POST", url, headers=headers, data=payload, stream=True) as response:
-            for chunk in response.iter_content(chunk_size=1024):
-                if chunk:
-                    self.output_panel(chunk.decode('utf-8'))
+        url = xxx
+        payload = json.dumps(xxx)
+        headers = xxx
+
+        with open(self.out_file, 'a', encoding='utf-8') as out_file:
+            self.output_panel_file("\n\n\n# 问题：" + prompt + '\n', out_file)
+            self.output_panel(
+                text=f"--------------------------开始请求{DEFAULT_MODULE}--------------------------\n\n")
+            self.output_panel_file("## 回答：\n", out_file)
+            with requests.request("POST", url, headers=headers, data=payload, stream=True) as response:
+                for chunk in response.iter_content(chunk_size=1024):
+                    if chunk:
+                        self.output_panel_file(chunk.decode('utf-8'), out_file)
 
         sublime.set_timeout(self.output_panel(
             "\n\n\n--------------------------请求完成--------------------------"), 0)
+
+
+CONTINUE_FLG = True
+
+
+class Monitor(sublime_plugin.ApplicationCommand):
+    # continue_flg = True
+    pre_value = '0'
+
+    def run(self, op='once'):
+        global CONTINUE_FLG
+        if op == 'once':
+            self.fetch_data_my()
+        if op == 'continue':
+            CONTINUE_FLG = True
+            thread = threading.Thread(target=self.fetch_loop)
+            thread.start()
+        if op == 'stop':
+            CONTINUE_FLG = False
+
+    def fetch_data(self):
+        url = f"https://sqt.gtimg.cn/q=sh601012"
+        response = requests.request("GET", url)
+        if response.status_code == 200:
+            msg = response.text.split('~')[3]
+            sublime.status_message(f'>>>{msg}<<<')
+        else:
+            sublime.status_message(f'>>>Error fetching data<<<')
+
+    def fetch_data_my(self):
+        url = xxx
+        try:
+            response = requests.request("GET", url)
+            if response.status_code == 200:
+                msg = response.text
+                tag = "🔺" if float(msg) > float(self.pre_value) else "🟢" if float(
+                    msg) < float(self.pre_value) else "➖"
+                sublime.status_message(f'>>>{tag}{msg}<<<')
+                self.pre_value = msg
+            else:
+                sublime.status_message(f'>>>接口状态异常<<<')
+        except Exception as e:
+            sublime.status_message(f'>>>{e}<<<')
+
+    def fetch_loop(self):
+        global CONTINUE_FLG
+        event = threading.Event()
+        while CONTINUE_FLG:
+            self.fetch_data_my()
+            event.wait(5)
+            t = datetime.datetime.now()
+            if (t.hour == 11 and t.minute >= 30) or t.hour == 12 or t.hour >= 15:
+                CONTINUE_FLG = False
